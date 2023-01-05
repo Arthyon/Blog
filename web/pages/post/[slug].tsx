@@ -46,6 +46,9 @@ const ptComponents = {
 };
 
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  if (!post) {
+    return <div>404</div>;
+  }
   return (
     <div className="container">
       <Head>
@@ -76,6 +79,7 @@ export async function getStaticPaths() {
     groq`*[_type == "post" && defined(slug.current)][].slug.current`
   );
 
+  console.log("PATHS", paths);
   return {
     paths: paths.map((slug: any) => ({ params: { slug } })),
     fallback: true,
@@ -98,7 +102,6 @@ export const getStaticProps: GetStaticProps<IPostProps, ContextParams> = async (
 
   }`;
   const post = await client.fetch(query, { slug });
-  console.log(post);
   return {
     props: {
       post,
