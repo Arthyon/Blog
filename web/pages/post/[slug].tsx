@@ -1,10 +1,11 @@
 import groq from "groq";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
+import imageUrlBuilder from "@sanity/image-url";
 import Head from "next/head";
 import client from "../../client";
-import imageUrlBuilder from "@sanity/image-url";
-import { PortableText } from "@portabletext/react";
+import Layout from "@components/Layout";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import RichText from "@components/RichText";
 
 interface IPostProps {
   post: {
@@ -23,34 +24,12 @@ function urlFor(source: SanityImageSource) {
   return imageUrlBuilder(client).image(source);
 }
 
-const ptComponents = {
-  types: {
-    image: ({ value }: any) => {
-      if (!value?.asset?._ref) {
-        return null;
-      }
-      return (
-        <img
-          alt={value.alt || " "}
-          loading="lazy"
-          src={urlFor(value)
-            // .width(320)
-            // .height(240)
-            // .fit("max")
-            // .auto("format")
-            .url()}
-        />
-      );
-    },
-  },
-};
-
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
   if (!post) {
     return <div>404</div>;
   }
   return (
-    <div className="container">
+    <Layout>
       <Head>
         <title>{post.title}</title>
       </Head>
@@ -69,8 +48,8 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
           <img src={urlFor(post.authorImage).width(50).url()} />
         </div>
       )}
-      <PortableText value={post.body} components={ptComponents} />
-    </div>
+      <RichText body={post.body} />
+    </Layout>
   );
 };
 
@@ -79,7 +58,6 @@ export async function getStaticPaths() {
     groq`*[_type == "post" && defined(slug.current)][].slug.current`
   );
 
-  console.log("PATHS", paths);
   return {
     paths: paths.map((slug: any) => ({ params: { slug } })),
     fallback: true,
@@ -93,7 +71,9 @@ export const getStaticProps: GetStaticProps<IPostProps, ContextParams> = async (
     return { notFound: true };
   }
   const { slug = "" } = context.params;
-  const query = groq`*[_type == "post" && slug.current == $slug][0]{
+  const query = groq`*[_type == "post" && slug.current == $slug]
+  {
+    _id,
     title,
     body,
     "categories": categories[]->title,
@@ -101,10 +81,18 @@ export const getStaticProps: GetStaticProps<IPostProps, ContextParams> = async (
     "authorImage": author->image
 
   }`;
-  const post = await client.fetch(query, { slug });
+  const posts = await client.fetch(query, { slug });
+  if (posts.length == 0) {
+    return { notFound: true };
+  }
+  let post =
+    posts.length == 1
+      ? posts[0]
+      : posts.find((i: { _id: string }) => i._id.startsWith("drafts."));
+
   return {
     props: {
-      post,
+      post: post,
     },
   };
 };
