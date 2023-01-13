@@ -1,0 +1,19 @@
+name: Deploy sanity
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-sanity-studio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: GitHub Action for Sanity.io
+        uses: sanity-io/github-action-sanity@v0.1-alpha
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_STUDIO_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ vars.SANITY_STUDIO_DATASET }}
+        with:
+          args: deploy
