@@ -11,6 +11,7 @@ interface IPostProps {
   post: {
     title: string;
     name: string;
+    leadParagraph: string;
     body: [];
     categories: string[];
     authorImage: SanityImageSource;
@@ -48,6 +49,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
           <img src={urlFor(post.authorImage).width(50).url()} />
         </div>
       )}
+      {post.leadParagraph}
       <RichText body={post.body} />
     </Layout>
   );
@@ -73,14 +75,13 @@ export const getStaticProps: GetStaticProps<IPostProps, ContextParams> = async (
   const { slug = "" } = context.params;
   const query = groq`*[_type == "post" && slug.current == $slug]
   {
-    _id,
-    title,
-    body,
+    ...,
     "categories": categories[]->title,
     "name": author->name,
     "authorImage": author->image
 
   }`;
+
   const posts = await client.fetch(query, { slug });
   if (posts.length == 0) {
     return { notFound: true };
