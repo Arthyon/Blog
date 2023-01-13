@@ -18,7 +18,11 @@ export interface ICodeViewProps {
   inline?: boolean;
 }
 
-const CodeView: FC<ICodeViewProps> = ({ code, language, inline = false }) => {
+const CodeView: FC<ICodeViewProps> = ({
+  code,
+  language = "csharp",
+  inline = false,
+}) => {
   return <Refractor language={language} value={code} inline={inline} />;
 };
 

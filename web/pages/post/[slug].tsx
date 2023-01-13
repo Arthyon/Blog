@@ -6,17 +6,17 @@ import client from "../../client";
 import Layout from "@components/Layout";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import RichText from "@components/RichText";
+import { IColor } from "Models/IColor";
+import { IPostDetails } from "Models/IPost";
+import DisplayDate from "@components/DisplayDate";
 
 interface IPostProps {
-  post: {
-    title: string;
+  post: IPostDetails & {
     name: string;
-    leadParagraph: string;
-    body: [];
-    categories: string[];
-    authorImage: SanityImageSource;
+    categories: { title: string; color: IColor }[];
   };
 }
+
 type ContextParams = {
   slug: string;
 };
@@ -34,23 +34,28 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
       <Head>
         <title>{post.title}</title>
       </Head>
-      <h1>{post.title}</h1>
-      {post.categories && (
-        <ul>
-          Posted in
-          {post.categories.map((category) => (
-            <li key={category}>{category}</li>
-          ))}
-        </ul>
-      )}
-      <p>By {post.name}</p>
-      {post.authorImage && (
-        <div>
-          <img src={urlFor(post.authorImage).width(50).url()} />
-        </div>
-      )}
-      {post.leadParagraph}
-      <RichText body={post.body} />
+      <h1 className="text-center mt-2 mb-2 text-4xl">{post.title}</h1>
+      {post.mainImage && <img src={urlFor(post.mainImage).url()} />}
+      <div className="mb-8 text-lg font-normal text-center lg:text-xl sm:px-16 xl:px-48 text-gray-400">
+        <p>{post.name}</p>
+        <DisplayDate dateString={post.publishedAt} />
+      </div>
+      {/* <div>
+        {post.categories && (
+          <ul>
+            {post.categories.map((category) => (
+              <li key={category.title}>
+                <CategoryLabel title={category.title} color={category.color} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div> */}
+      <div className="mt-4 text-lg lg:mx-64">
+        <p>{post.leadParagraph}</p>
+        <RichText body={post.body} />
+      </div>
+      &nbsp;
     </Layout>
   );
 };
@@ -76,9 +81,8 @@ export const getStaticProps: GetStaticProps<IPostProps, ContextParams> = async (
   const query = groq`*[_type == "post" && slug.current == $slug]
   {
     ...,
-    "categories": categories[]->title,
+    "categories": categories[]->{title,color},
     "name": author->name,
-    "authorImage": author->image
 
   }`;
 

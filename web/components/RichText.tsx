@@ -1,16 +1,17 @@
-import { PortableText } from "@portabletext/react";
+import { PortableText, PortableTextTypeComponent } from "@portabletext/react";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import imageUrlBuilder from "@sanity/image-url";
 import { FC } from "react";
 import client from "../client";
 import CodeView from "./CodeView";
+import { IRichText } from "Models/IRichText";
 
 interface IRichTextProps {
-  body: [];
+  body: IRichText;
 }
 
 const RichText: FC<IRichTextProps> = ({ body }) => {
-  return <PortableText value={body} components={ptComponents} />;
+  return <PortableText value={body as any} components={ptComponents} />;
 };
 
 function urlFor(source: SanityImageSource) {
@@ -24,16 +25,7 @@ const ptComponents = {
         return <></>;
       }
       return (
-        <img
-          alt={value.alt || " "}
-          loading="lazy"
-          src={urlFor(value)
-            // .width(320)
-            // .height(240)
-            // .fit("max")
-            // .auto("format")
-            .url()}
-        />
+        <img alt={value.alt || " "} loading="lazy" src={urlFor(value).url()} />
       );
     },
     code: ({ value }: any) => {

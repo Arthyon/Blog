@@ -3,7 +3,8 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import client from "../client";
 import Layout from "@components/Layout";
-import Post, { IPost } from "@components/Post";
+import Post from "@components/Post";
+import { IPost } from "Models/IPost";
 
 interface IHomeProps {
   content: {

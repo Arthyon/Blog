@@ -49,7 +49,8 @@ export default defineType({
     defineField({
       name: 'leadParagraph',
       title: 'Lead Paragraph',
-      type: 'string',
+      type: 'text',
+      rows: 4,
     }),
     defineField({
       name: 'body',

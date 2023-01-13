@@ -13,6 +13,15 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'color',
+      title: 'Color',
+      type: 'color',
+      validation: (Rule) => Rule.required(),
+      options: {
+        disableAlpha: true,
+      },
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',

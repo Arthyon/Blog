@@ -1,12 +1,6 @@
+import { IPost } from "Models/IPost";
 import Link from "next/link";
 import { FC } from "react";
-
-export interface IPost {
-  _id: string;
-  slug: { current: string };
-  title: string;
-  leadParagraph: string;
-}
 
 interface IPostProps {
   post: IPost;
@@ -24,6 +18,9 @@ const Post: FC<IPostProps> = ({ post }) => {
         </h5>
         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
           {post.leadParagraph}
+        </p>
+        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+          {new Date(post.publishedAt).toLocaleDateString("nb-NO")}
         </p>
       </div>
     </Link>
