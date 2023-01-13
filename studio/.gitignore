@@ -1,4 +1,5 @@
 .sanity
+dist
 # Logs
 logs
 *.log
