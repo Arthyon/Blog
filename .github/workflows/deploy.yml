@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: GitHub Action for Sanity.io
-        uses: sanity-io/github-action-sanity@v0.1-alpha
+        uses: sanity-io/github-action-sanity@v0.3
         env:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
           SANITY_STUDIO_PROJECT_ID: ${{ vars.SANITY_STUDIO_PROJECT_ID }}
           SANITY_STUDIO_DATASET: ${{ vars.SANITY_STUDIO_DATASET }}
         with:
-          args: deploy
+          args: studio deploy
