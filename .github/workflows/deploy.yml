@@ -1,9 +1,8 @@
 name: Deploy sanity
 on:
-  push
-  # push:
-  #   branches:
-  #     - master
+  push:
+    branches:
+      - master
 
 jobs:
   deploy-sanity-studio:
