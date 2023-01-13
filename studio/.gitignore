@@ -1,5 +1,6 @@
 .sanity
 dist
+.env.local
 # Logs
 logs
 *.log
