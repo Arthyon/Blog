@@ -31,11 +31,9 @@ export default function Home({
         <div className="mb-8 text-lg font-normal lg:text-xl sm:px-16 xl:px-48 text-gray-400">
           {content.subtitle}
         </div>
-        <ul className="grid justify-items-stretch">
-          {posts.map((p) => (
-            <Post key={p._id} post={p}></Post>
-          ))}
-        </ul>
+        {posts.map((p) => (
+          <Post key={p._id} post={p}></Post>
+        ))}
       </section>
     </Layout>
   );
