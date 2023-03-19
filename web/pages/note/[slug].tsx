@@ -24,7 +24,7 @@ const Note = ({ note }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <title>{note.title}</title>
       </Head>
       <h1 className="text-center mt-2 mb-2 text-4xl">{note.title}</h1>
-      <div className="mt-4 text-lg lg:mx-64">
+      <div className="mt-4 text-lg mx-4 lg:mx-64">
         <RichText body={note.body} />
       </div>
       &nbsp;
