@@ -11,7 +11,11 @@ interface IRichTextProps {
 }
 
 const RichText: FC<IRichTextProps> = ({ body }) => {
-  return <PortableText value={body as any} components={ptComponents} />;
+  return (
+    <div className="prose prose-base dark:prose-invert">
+      <PortableText value={body as any} components={ptComponents} />
+    </div>
+  );
 };
 
 function urlFor(source: SanityImageSource) {
